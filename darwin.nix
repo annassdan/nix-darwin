@@ -64,8 +64,21 @@
   system.defaults.trackpad.Clicking = true;                     # tap to click
   system.defaults.NSGlobalDomain."com.apple.mouse.tapBehavior" = 1; # tap to click (also on login screen)
   system.defaults.trackpad.TrackpadRightClick = true;           # two-finger tap = right click
-  system.defaults.trackpad.TrackpadThreeFingerDrag = true;      # three fingers to drag windows / selections
 
+  system.defaults.trackpad.Dragging = true;                  # one finger: tap-hold to select
+  system.defaults.trackpad.TrackpadThreeFingerDrag = false;  # frees three fingers for swipes
+
+  system.defaults.dock.showAppExposeGestureEnabled = true;
+  system.defaults.CustomUserPreferences = {
+    "com.apple.AppleMultitouchTrackpad" = {
+      TrackpadThreeFingerVertSwipeGesture = 2;
+      TrackpadThreeFingerHorizSwipeGesture = 2;
+    };
+    "com.apple.driver.AppleBluetoothMultitouch.trackpad" = {
+      TrackpadThreeFingerVertSwipeGesture = 2;
+      TrackpadThreeFingerHorizSwipeGesture = 2;
+    };
+  };
   system.configurationRevision = self.rev or self.dirtyRev or null;
   system.stateVersion = 6;
 }
