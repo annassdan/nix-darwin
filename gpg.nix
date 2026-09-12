@@ -10,8 +10,15 @@ in
   # Installs gnupg and creates ~/.gnupg with the correct 700 permissions
   programs.gpg.enable = true;
 
-  programs.gpg.scdaemonSettings.disable-ccid = true;
- 
+  # On macOS, the Nix build of gnupg links against nixpkgs' pcsclite, which
+  # expects a pcscd daemon that doesn't exist here — scdaemon then fails with
+  # "selecting card failed: Service is not running".
+  # Point it at Apple's own PC/SC implementation instead.
+  programs.gpg.scdaemonSettings = {
+    disable-ccid = true;
+    pcsc-driver = "/System/Library/Frameworks/PCSC.framework/Versions/Current/PCSC";
+  };
+
   home.packages = [
     pkgs.pinentry_mac      # macOS popup for your YubiKey PIN
     pkgs.yubikey-manager   # ykman
