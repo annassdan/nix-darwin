@@ -15,7 +15,7 @@ in
   # "selecting card failed: Service is not running".
   # Point it at Apple's own PC/SC implementation instead.
   programs.gpg.scdaemonSettings = {
-    disable-ccid = true;
+    disable-ccid = false;
     pcsc-driver = "/System/Library/Frameworks/PCSC.framework/Versions/Current/PCSC";
   };
 
