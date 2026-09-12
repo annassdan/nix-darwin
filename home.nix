@@ -53,8 +53,10 @@ in
 
   programs.git = {
     enable = true;
-    userName = "Annas DAN";
-    userEmail = "annassdan@gmail.com";
+    user = {
+      name = "Annas DAN"
+      email = "annassdan@gmail.com"
+    }
   };
 
   programs.home-manager.enable = true;
