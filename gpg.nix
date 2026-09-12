@@ -10,6 +10,8 @@ in
   # Installs gnupg and creates ~/.gnupg with the correct 700 permissions
   programs.gpg.enable = true;
 
+  programs.gpg.scdaemonSettings.disable-ccid = true;
+ 
   home.packages = [
     pkgs.pinentry_mac      # macOS popup for your YubiKey PIN
     pkgs.yubikey-manager   # ykman

@@ -53,10 +53,10 @@ in
 
   programs.git = {
     enable = true;
-    user = {
-      name = "Annas DAN"
-      email = "annassdan@gmail.com"
-    }
+    # Newer home-manager option names. On older versions these were
+    # programs.git.userName / userEmail (still accepted, but warns).
+    settings.user.name = "Annas DAN";
+    settings.user.email = "annassdan@gmail.com";
   };
 
   programs.home-manager.enable = true;
