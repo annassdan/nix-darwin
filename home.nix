@@ -4,8 +4,10 @@ let
   homeDir = config.home.homeDirectory;
 
   nodejs = pkgs.nodejs_24;
-  # Make pnpm itself run on node 24 too (instead of nixpkgs' default node)
-  pnpm = pkgs.pnpm.override { inherit nodejs; };
+  # Make pnpm itself run on node 24 too (instead of nixpkgs' default node).
+  # nixpkgs wants nodejs-slim here, not nodejs — overriding nodejs prints
+  # "pnpm: Override nodejs-slim instead of nodejs".
+  pnpm = pkgs.pnpm.override { nodejs-slim = pkgs.nodejs-slim_24; };
 in
 {
   imports = [
@@ -39,6 +41,7 @@ in
 
   home.sessionPath = [
     "${homeDir}/Library/pnpm"
+    "${homeDir}/Library/pnpm/bin"   # pnpm 11 puts global binaries here
     "${homeDir}/.npm-global/bin"
     "${homeDir}/go/bin"
   ];
@@ -55,8 +58,8 @@ in
     enable = true;
     # Newer home-manager option names. On older versions these were
     # programs.git.userName / userEmail (still accepted, but warns).
-    settings.user.name = "Annas DAN";
-    settings.user.email = "annassdan@gmail.com";
+    # settings.user.name = "DAN";
+    # settings.user.email = "you@integer.id";
   };
 
   programs.home-manager.enable = true;
