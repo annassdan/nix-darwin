@@ -86,7 +86,7 @@ git init && git add . && git commit -m "init"
 This takes a while the first time because it downloads everything.
 
 ```bash
-sudo nix run nix-darwin/master#darwin-rebuild -- switch --flake ~/.config/nix-darwin#dan-macbook
+sudo nix run nix-darwin/master#darwin-rebuild -- switch --flake ~/.config/nix-darwin#annas-macbook
 ```
 
 ### 9. Log out and back in (or restart)
