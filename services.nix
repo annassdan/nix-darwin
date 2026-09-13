@@ -178,6 +178,13 @@ in
   home.sessionVariables = {
     PGHOST = "127.0.0.1";
     PGUSER = "postgres";
+
+    # Ready-made connection URLs. No database name, so append one:
+    #   psql "$PG_URL/myapp_development"
+    #   DATABASE_URL="$PG_URL/myapp_development" rails db:migrate
+    PG_URL = "postgresql://postgres:${pgPassword}@127.0.0.1:5432";
+    PG_ALT_URL = "postgresql://postgres:${pgPassword}@127.0.0.1:54322";
+    REDIS_URL = "redis://127.0.0.1:6379";
   };
 
   # ~/.pgpass so psql and other libpq tools don't prompt for the dev password.
