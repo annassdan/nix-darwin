@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 let
   homeDir = config.home.homeDirectory;
@@ -8,6 +8,19 @@ let
   # nixpkgs wants nodejs-slim here, not nodejs — overriding nodejs prints
   # "pnpm: Override nodejs-slim instead of nodejs".
   pnpm = pkgs.pnpm.override { nodejs-slim = pkgs.nodejs-slim_24; };
+
+  # Repos cloned into $HOME on the first rebuild.
+  # An existing folder is left alone — change the branch here and the clone
+  # will NOT move; check out the new branch yourself in that case.
+  # mkdirs: folders created inside the clone, only right after a fresh clone.
+  repos = [
+    {
+      url = "https://github.com/bytebase/bytebase.git";
+      dest = "${homeDir}/bytebase";
+      branch = "release/3.22.1";
+      mkdirs = [ "bytebase-build" ];
+    }
+  ];
 in
 {
   imports = [
@@ -63,4 +76,24 @@ in
   };
 
   programs.home-manager.enable = true;
+
+  # Clone repos listed above, once. Existing folders are skipped, so this never
+  # touches work in progress. HTTPS on purpose: SSH would wait on the YubiKey
+  # during activation and hang the rebuild.
+  home.activation.cloneRepos = lib.hm.dag.entryAfter [ "writeBoundary" ] (
+    lib.concatMapStrings (r: ''
+      if [ -e "${r.dest}" ]; then
+        echo "skipping ${r.dest} (already exists)"
+      else
+        echo "cloning ${r.url} (${r.branch}) -> ${r.dest}"
+        if ${pkgs.git}/bin/git clone --branch "${r.branch}" "${r.url}" "${r.dest}"; then
+          ${lib.concatMapStrings (d: ''
+            mkdir -p "${r.dest}/${d}"
+          '') (r.mkdirs or [ ])}
+        else
+          echo "clone failed for ${r.url}, continuing"
+        fi
+      fi
+    '') repos
+  );
 }
