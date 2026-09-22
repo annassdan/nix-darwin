@@ -35,6 +35,11 @@ in
     pnpm
     pkgs.go
     pkgs.gopls        # Go language server (editor autocomplete / diagnostics)
+    pkgs.rustc
+    pkgs.cargo
+    pkgs.rust-analyzer # Rust language server (editor autocomplete / diagnostics)
+    pkgs.clippy
+    pkgs.rustfmt
     pkgs.ripgrep
     pkgs.fzf
     pkgs.jq
@@ -57,6 +62,7 @@ in
     "${homeDir}/Library/pnpm/bin"   # pnpm 11 puts global binaries here
     "${homeDir}/.npm-global/bin"
     "${homeDir}/go/bin"
+    "${homeDir}/.cargo/bin"   # `cargo install` writes binaries here, not into /nix/store
   ];
 
   programs.zsh.enable = true;
