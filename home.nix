@@ -43,6 +43,7 @@ in
     pkgs.ripgrep
     pkgs.fzf
     pkgs.jq
+    pkgs.typst
   ];
 
   # ---- The important part for pnpm/npm ----
