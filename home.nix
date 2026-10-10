@@ -44,6 +44,7 @@ in
     pkgs.fzf
     pkgs.jq
     pkgs.typst
+    pkgs.uv           # Python package/project manager (also installs Python versions)
   ];
 
   # ---- The important part for pnpm/npm ----
@@ -64,6 +65,7 @@ in
     "${homeDir}/.npm-global/bin"
     "${homeDir}/go/bin"
     "${homeDir}/.cargo/bin"   # `cargo install` writes binaries here, not into /nix/store
+    "${homeDir}/.local/bin"   # `uv tool install` writes binaries here
   ];
 
   programs.zsh.enable = true;
