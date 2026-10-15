@@ -69,6 +69,16 @@ in
   ];
 
   programs.zsh.enable = true;
+  # Vite+ (`vp`, installed by the activation step below). Its env file puts
+  # ~/.vite-plus/bin first and ~/.vite-plus/fallback-bin last on PATH.
+  # .zshenv so every zsh (and IDEs/GUI apps that read the shell env) gets it;
+  # .zshrc again so tab completion loads after compinit. Safe to source twice.
+  programs.zsh.envExtra = ''
+    [ -f "${homeDir}/.vite-plus/env" ] && . "${homeDir}/.vite-plus/env"
+  '';
+  programs.zsh.initContent = ''
+    [ -f "${homeDir}/.vite-plus/env" ] && . "${homeDir}/.vite-plus/env"
+  '';
 
   # Auto-load per-project flake dev shells when you cd into a folder
   programs.direnv = {
@@ -105,4 +115,30 @@ in
       fi
     '') repos
   );
+
+  # Install Vite+ (`vp`) once, same as `curl -fsSL https://vite.plus | bash`.
+  # Not in nixpkgs, so it lives outside the store in ~/.vite-plus. Skipped when
+  # already installed; update it with `vp upgrade`, not by rebuilding.
+  #  - CI=1 / VP_NODE_MANAGER=no: no prompts (activation has no terminal), and
+  #    keep using the Nix node instead of letting Vite+ manage node.
+  #  - VP_SELF_SETUP_NO_MODIFY_PATH=1: don't edit ~/.zshrc (it's a read-only
+  #    Nix symlink); the env file is sourced in programs.zsh above.
+  #  - `vp env off pnpm` (every rebuild): the `pnpm` shim in ~/.vite-plus/bin
+  #    hands off to the Nix pnpm above instead of downloading its own.
+  home.activation.installVitePlus = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    if [ -x "${homeDir}/.vite-plus/bin/vp" ]; then
+      echo "skipping Vite+ (already installed)"
+    else
+      echo "installing Vite+ -> ${homeDir}/.vite-plus"
+      if ! PATH="${lib.makeBinPath [ pkgs.curl pkgs.gnutar pkgs.gzip pkgs.bash nodejs ]}:$PATH:/usr/bin:/bin" \
+        CI=1 VP_NODE_MANAGER=no VP_SELF_SETUP_NO_MODIFY_PATH=1 VP_HOME="${homeDir}/.vite-plus" \
+        ${pkgs.bash}/bin/bash -c "${pkgs.curl}/bin/curl -fsSL https://vite.plus | bash"; then
+        echo "Vite+ install failed, continuing"
+      fi
+    fi
+    if [ -x "${homeDir}/.vite-plus/bin/vp" ]; then
+      PATH="${lib.makeBinPath [ pnpm nodejs ]}:$PATH" VP_HOME="${homeDir}/.vite-plus" \
+        "${homeDir}/.vite-plus/bin/vp" env off pnpm || echo "vp env off pnpm failed, continuing"
+    fi
+  '';
 }
