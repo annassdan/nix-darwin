@@ -34,6 +34,8 @@
       "firefox"                 # browser
       "thebrowsercompany-dia"   # Dia browser
       "yaak"                    # REST / GraphQL / gRPC client
+      "codex"                   # OpenAI Codex CLI
+      "claude-code"             # Anthropic Claude Code CLI
     ];
 
     # brews = [ ];              # CLI tools that aren't in nixpkgs

@@ -66,6 +66,7 @@ in
     "${homeDir}/go/bin"
     "${homeDir}/.cargo/bin"   # `cargo install` writes binaries here, not into /nix/store
     "${homeDir}/.local/bin"   # `uv tool install` writes binaries here
+    "/opt/homebrew/bin"       # brew itself + CLI casks (codex, claude-code)
   ];
 
   programs.zsh.enable = true;
