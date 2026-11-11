@@ -33,12 +33,22 @@
       "terax"                   # AI-native terminal / dev workspace
       "firefox"                 # browser
       "thebrowsercompany-dia"   # Dia browser
-      "yaak"                    # REST / GraphQL / gRPC client
+      # "yaak"                    # REST / GraphQL / gRPC client
       "codex"                   # OpenAI Codex CLI
       "claude-code"             # Anthropic Claude Code CLI
     ];
 
-    # brews = [ ];              # CLI tools that aren't in nixpkgs
+    # Extra Homebrew repositories (same as `brew tap ...`). Like the lists
+    # below, a tap removed from here is untapped on the next rebuild.
+    taps = [
+      "blankline-org/dropstone-cli"   # github.com/blankline-org/homebrew-dropstone-cli
+    ];
+
+    # CLI tools that aren't in nixpkgs
+    brews = [
+      "agent-browser"           # Vercel's browser automation CLI for AI agents
+      "blankline-org/dropstone-cli/dropstone"   # Dropstone, runtime intelligence for writing, research and code
+    ];
     # masApps = { };            # Mac App Store apps, e.g. { Xcode = 497799835; }
 
     onActivation = {
