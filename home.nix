@@ -9,6 +9,8 @@ let
   # "pnpm: Override nodejs-slim instead of nodejs".
   pnpm = pkgs.pnpm.override { nodejs-slim = pkgs.nodejs-slim_24; };
 
+  python = pkgs.python312;
+
   # Repos cloned into $HOME on the first rebuild.
   # An existing folder is left alone — change the branch here and the clone
   # will NOT move; check out the new branch yourself in that case.
@@ -44,7 +46,9 @@ in
     pkgs.fzf
     pkgs.jq
     pkgs.typst
+    python            # Python 3.12 (python3 / python3.12 on PATH; TE_PYTHON below)
     pkgs.uv           # Python package/project manager (also installs Python versions)
+    pkgs.llmfit       # TUI to find LLMs that fit this machine's RAM/CPU/GPU
   ];
 
   # ---- The important part for pnpm/npm ----
@@ -57,6 +61,9 @@ in
     # Same idea for Go: `go install` writes binaries here, not into /nix/store
     GOPATH = "${homeDir}/go";
     GOBIN = "${homeDir}/go/bin";
+
+    # Python interpreter for tools that read TE_PYTHON (fixed /nix/store path)
+    TE_PYTHON = "${python}/bin/python3.12";
   };
 
   home.sessionPath = [
