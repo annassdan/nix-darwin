@@ -30,7 +30,6 @@
     # (because of the "zap" cleanup below), so keep this list complete.
     casks = [
       "zed"                     # code editor
-      "terax"                   # AI-native terminal / dev workspace
       "firefox"                 # browser
       "thebrowsercompany-dia"   # Dia browser
       # "yaak"                    # REST / GraphQL / gRPC client
